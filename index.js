@@ -2,9 +2,12 @@ import { ethers } from "./ethers-5.6.esm.min.js";
 import { contractAddress, abi } from "./constants.js";
 
 const connectButton = document.getElementById("connectButton");
+const connectLabel = document.getElementById("connectLabel");
 const fundButton = document.getElementById("fundButton");
 const balanceButton = document.getElementById("balanceButton");
+const balanceLabel = document.getElementById("balanceLabel");
 const withdrawButton = document.getElementById("withdrawButton");
+const withdrawLabel = document.getElementById("withdrawLabel");
 connectButton.onclick = connect;
 fundButton.onclick = fund;
 balanceButton.onclick = getBalance;
@@ -20,6 +23,7 @@ async function connect() {
         connectButton.innerHTML = "Connected";
         const accounts = await ethereum.request({ method: "eth_accounts" });
         console.log(accounts);
+        connectLabel.innerHTML = accounts;
     } else {
         connectButton.innerHTML = "Please install MetaMask";
     }
@@ -30,6 +34,7 @@ async function getBalance() {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const balance = await provider.getBalance(contractAddress);
         console.log(ethers.utils.formatEther(balance));
+        balanceLabel.innerHTML = `${ethers.utils.formatEther(balance)} ETH`;
     }
 }
 
@@ -37,10 +42,9 @@ async function fund() {
     const ethAmount = document.getElementById("ethAmount").value;
     console.log(`Funding with ${ethAmount}...`);
     if (typeof window.ethereum !== "undefined") {
-        // provider / connection to the blockchain
-        // signer / wallet / someone with some gas
-        // contract that we are interacting with
-        // ^ ABI & Address
+        // provider - connection to the blockchain
+        // signer / wallet - someone with some gas
+        // ABI & Contract address - contract that we are interacting with
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract(contractAddress, abi, signer);
@@ -48,8 +52,7 @@ async function fund() {
             const transactionResponse = await contract.fund({
                 value: ethers.utils.parseEther(ethAmount),
             });
-            // listen for the tx to be mined
-            // hej, wait for this TX to finish
+            // Listen amd wait for the tx to be mined
             await listenForTransactionMine(transactionResponse, provider);
             console.log("Done!");
         } catch (error) {
@@ -60,7 +63,7 @@ async function fund() {
 
 function listenForTransactionMine(transactionResponse, provider) {
     console.log(`Mining ${transactionResponse.hash}...`);
-    // listen for this transaction to finish
+    // Listen for this transaction to finish
     return new Promise((resolve, reject) => {
         provider.once(transactionResponse.hash, (transactionReceipt) => {
             console.log(
@@ -77,12 +80,17 @@ async function withdraw() {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract(contractAddress, abi, signer);
+        const balance = await provider.getBalance(contractAddress);
 
         try {
             const transactionResponse = await contract.withdraw();
             await listenForTransactionMine(transactionResponse, provider);
+            withdrawLabel.innerHTML = `Withdrawal completed! ${ethers.utils.formatEther(
+                balance
+            )} ETH`;
         } catch (error) {
-            console.log(error);
+            console.log("ERROR! Not Owner!!!");
+            withdrawLabel.innerHTML = `ERROR! Not Owner!!!`;
         }
     }
 }

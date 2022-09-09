@@ -2,19 +2,33 @@
 <html>
     <head>
         <title>Fund Me App</title>
+        <style>
+            body {
+                margin: auto;
+                max-width: 80%;
+            }
+        </style>
     </head>
 
     <body>
-        Fund Me App
-        <button id="connectButton">Connect</button>
-        <button id="balanceButton">getBalance</button>
-        <button id="withdrawButton">Withdraw</button>
+        <h1>Fund Me App</h1>
+        <p>
+            <button id="connectButton">Connect</button>
+            <label id="connectLabel"></label>
+        </p>
+        <p>
+            <button id="balanceButton">getBalance</button>
+            <label id="balanceLabel"></label>
+        </p>
         <!-- <form> -->
         <label for="ethAmount">ETH Amount</label>
         <input id="ethAmount" placeholder="0.1" />
         <button type="button" id="fundButton">Fund</button>
         <!-- </form> -->
-        
+        <p>
+            <button id="withdrawButton">Withdraw</button>
+            <label id="withdrawLabel"></label>
+        </p>
     </body>
 
     <script src="./index.js" type="module"></script>

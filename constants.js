@@ -1,8 +1,8 @@
 // Hardhat network
-// export const contractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+export const contractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
 // Goerli network
-export const contractAddress = "0x88DC48d1360A1d2325B890d705a68C397D1F31aA";
+// export const contractAddress = "0x88DC48d1360A1d2325B890d705a68C397D1F31aA";
 
 export const abi = [
     {
